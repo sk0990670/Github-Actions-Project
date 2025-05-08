@@ -30,17 +30,21 @@ jobs:
 
     - name: Trivy Installation
       run: |
-        sudo apt-get update
-        sudo apt-get install wget apt-transport-https gnupg lsb-release -y
-        curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | \
-        gpg --dearmor | \
-        sudo tee /usr/share/keyrings/trivy-archive-keyring.gpg > /dev/null
+       sudo rm -f /etc/apt/sources.list.d/trivy.list
+       sudo rm -f /usr/share/keyrings/trivy-archive-keyring.gpg
 
-        echo "deb [signed-by=/usr/share/keyrings/trivy-archive-keyring.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | \
-        sudo tee /etc/apt/sources.list.d/trivy.list > /dev/null
+       sudo apt-get update
+       sudo apt-get install wget apt-transport-https gnupg lsb-release -y
 
-        sudo apt-get update
-        sudo apt-get install trivy -y
+       curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | \
+       gpg --dearmor | \
+       sudo tee /usr/share/keyrings/trivy-archive-keyring.gpg > /dev/null
+
+       echo "deb [signed-by=/usr/share/keyrings/trivy-archive-keyring.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | \
+       sudo tee /etc/apt/sources.list.d/trivy.list > /dev/null
+
+       sudo apt-get update
+       sudo apt-get install trivy -y
 
 
     - name: Trivy FS Scan
